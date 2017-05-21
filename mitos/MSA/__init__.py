@@ -1,1 +1,1 @@
-from MSA import *
+from .MSA import *

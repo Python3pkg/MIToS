@@ -1,4 +1,4 @@
-from Annotations import annotate_modification
+from .Annotations import annotate_modification
 
 
 def ncolumns(msa):
@@ -6,15 +6,14 @@ def ncolumns(msa):
 
 
 def coverage(sequence, reference):
-    matchs = zip(sequence, reference)
-    matchs = filter(lambda residues: residues[0] not in ['-', '.'], matchs)
-    count = sum(map(lambda residues: residues[0].lower() == residues[1].lower(),
-                    matchs))
+    matchs = list(zip(sequence, reference))
+    matchs = [residues for residues in matchs if residues[0] not in ['-', '.']]
+    count = sum([residues[0].lower() == residues[1].lower() for residues in matchs])
     return count / float(len(matchs))
 
 
 def filtersequences(msa, condition, annotate):
-    msa.__dict__['_records'] = filter(condition, msa.__dict__['_records'])
+    msa.__dict__['_records'] = list(filter(condition, msa.__dict__['_records']))
     return msa
 
 
@@ -27,9 +26,9 @@ def columngappercentage(column):
 
 
 def filtercolumns(msa, condition, annotate):
-    seqs = map(lambda s: s.seq, msa)
-    valid_cols = filter(condition, zip(*seqs))
-    seqs = zip(*valid_cols)
+    seqs = [s.seq for s in msa]
+    valid_cols = list(filter(condition, list(zip(*seqs))))
+    seqs = list(zip(*valid_cols))
     for sr, s in zip(msa, seqs):
         sr.__dict__['_seq'].__dict__['_data'] = ''.join(s)
     return msa
@@ -48,7 +47,7 @@ following order:
  (default to `0.5`: 50% of gaps)
 """
 def gapstrip(msa, reference, annotate=True, coverage_limit=0.75, gap_limit=0.5):
-    reference = filter(lambda r: r.description == reference, msa)
+    reference = [r for r in msa if r.description == reference]
     if not reference:
         raise Exception("Unknonw reference {:} inside the MSA.".format(reference))
     else:

@@ -1,2 +1,2 @@
-from MultipleSequenceAlignment import *
-from Annotations import *
+from .MultipleSequenceAlignment import *
+from .Annotations import *

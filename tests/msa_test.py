@@ -11,9 +11,9 @@ class TestMSA(unittest.TestCase):
     def test_coverage(self):
         covers_expected = [1.0, 0.718, 0.674, 0.722, 0.727, 0.907, 0.907, 0.947,
                            0.952, 0.762 ]
-        covers_obtain = map(lambda s: coverage(self.msa[0], s), self.msa)
-        map(lambda c: self.assertAlmostEqual(*c, places=3),
-            zip(covers_obtain, covers_expected))
+        covers_obtain = [coverage(self.msa[0], s) for s in self.msa]
+        list(map(lambda c: self.assertAlmostEqual(*c, places=3),
+            list(zip(covers_obtain, covers_expected))))
         cover = coverage(self.msa[0], self.msa[1])
         self.assertAlmostEquals(cover, 0.718, 3)
         cover = coverage(self.msa[0], self.msa[2])
@@ -38,10 +38,9 @@ class TestMSA(unittest.TestCase):
                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                   0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.8, 0.6, 0.6, 0.6, 0.5, 0.6, 0.6]
-        gapp_o = map(lambda i: columngappercentage(self.msa[:, i]),
-                     range(self.msa.get_alignment_length()))
-        map(lambda c: self.assertAlmostEqual(*c, places=3),
-            zip(gapp_o, gapp_e))
+        gapp_o = [columngappercentage(self.msa[:, i]) for i in range(self.msa.get_alignment_length())]
+        list(map(lambda c: self.assertAlmostEqual(*c, places=3),
+            list(zip(gapp_o, gapp_e))))
 
     def test_gapstrip(self):
         result = gapstrip(self.msa, 'Whale',
